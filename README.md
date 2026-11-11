@@ -83,6 +83,14 @@ forge script script/Replay.s.sol --sig "binance()" $R   # or "rseth()"
 forge script script/Replay.s.sol --sig "drain()"   $R   # attacker takes the rest: unshielded stuck at 100%
 ```
 
+### Dashboard
+
+```bash
+cd web && npm install && npm run dev   # http://localhost:3000
+```
+
+Without a wallet it shows the demo account's positions on both chains, a live feed of triggers and exits, and the latency of each exit. On Base the latency comes from millisecond block timestamps; on Unichain it's `exitTs − originTs`. With a wallet connected you can mint test mUSDC, create a Shield, and deposit shielded or unshielded. It reads addresses from `deployments/` and needs no backend.
+
 Built on [`reactive-lib-omni`](https://github.com/Reactive-Network/reactive-lib-omni). The older `reactive-lib` still deploys, but its subscriptions never activate.
 
 ## Repo layout
@@ -92,10 +100,11 @@ contracts/src/origin/     MockERC20, MockLendingPool, MockBridgeAdapter, RiskOra
 contracts/src/reactive/   ExitSentinel
 contracts/script/         DeployOrigin, DeploySentinel, SeedShield, Replay
 contracts/test/           Pool, Shield (+ fuzz), ShieldInvariant, Sentinel, Replay (end-to-end with a log relay)
+web/                      Next.js dashboard (wagmi + viem), reads deployments/ directly
 deployments/              addresses per chain (legacy-lib/ = an earlier deploy on the old library, unused)
 docs/                     demo transactions and latency
 ```
 
 ## Roadmap
 
-AI risk agent and Telegram alerts · Next.js dashboard with a live latency meter.
+AI risk agent and Telegram alerts · demo video.
