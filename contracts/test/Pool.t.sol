@@ -70,6 +70,16 @@ contract PoolTest is Test {
         pool.freeze();
     }
 
+    function test_unfreezeRestoresBorrowingOwnerOnly() public {
+        pool.freeze();
+        vm.prank(borrower);
+        vm.expectRevert();
+        pool.unfreeze();
+        pool.unfreeze();
+        _borrow(1e6);
+        assertEq(usdc.balanceOf(borrower), 1e6);
+    }
+
     function test_repayRestoresLiquidity() public {
         _borrow(1_000e6);
         vm.startPrank(borrower);

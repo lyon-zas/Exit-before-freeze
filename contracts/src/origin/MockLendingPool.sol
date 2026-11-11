@@ -89,6 +89,11 @@ contract MockLendingPool is Ownable {
         emit ReserveFrozen(address(asset), block.timestamp);
     }
 
+    /// @dev Testnet only: lets demo replays run more than once.
+    function unfreeze() external onlyOwner {
+        frozen = false;
+    }
+
     function _emitState() internal {
         emit ReserveState(address(asset), utilizationBps(), borrowRateBps(), available(), block.timestamp);
     }
