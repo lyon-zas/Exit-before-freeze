@@ -54,6 +54,18 @@ Steps: `reset()` and `seed()` on Base, `SeedShield` on Unichain, then `rseth()` 
 
 Latency: **Base 1,600 ms** (block `timestampMs` 1794392743000 → 1794392744600); **Unichain 2 s** (`exitTs − originTs` in `ExitExecuted`).
 
+## Run 5 — Binance replay again, watched live on the dashboard
+
+Same steps as Run 3 (`reset()`, `seed()`, `binance()`, `drain()`), with the dashboard open. It showed the exit at 1.8 s, and after the drain it showed the Base pool at 100% with the unshielded 4,000 mUSDC marked "stuck: 0 available".
+
+| Leg | Chain | Tx | Block |
+|---|---|---|---|
+| Hot-wallet outflow + borrow burst (one `binance()` broadcast) | Base Sepolia | `0x94d24ce28673cb2a4b0cb1d0c1f049910c98f1dc7ced49d3d332712f0f20b317`, `0x9bbba07ec938522128e2c9e2c8724aed6b2ba99f758f5bcf7576b1d29d93734a`, `0xfd99b2686ca3e4f355581369e688acd0236d8b3e27b69692b7193fb3616fb315` | 57389000 |
+| **Exit**: `ExitExecuted` 1,000 mUSDC → owner, reason 1 | Base Sepolia | `0xc99dfca404d5b66d078f8867cd6949e86c9db8de5800eccfcdb23f31d5a113fe` | 57389009 |
+| Attacker drains the rest (3,400 mUSDC), utilization 100% | Base Sepolia | `0x54cb3527d4c0221cf1b82d72eecb625a900291c0a2014fac5ef25e5800fc422d` | 57389943 |
+
+Latency: **1,800 ms** (measured by the dashboard from millisecond block timestamps); on-chain `exitTs − originTs` = 2 s.
+
 ## Latency summary
 
 | Run | Base | Unichain |
@@ -62,4 +74,5 @@ Latency: **Base 1,600 ms** (block `timestampMs` 1794392743000 → 1794392744600)
 | 2 collateral drain | 1,800 ms | 3 s |
 | 3 Binance replay | 1,800 ms | — |
 | 4 rsETH replay | 1,600 ms | 2 s |
+| 5 Binance replay (live dashboard) | 1,800 ms | — |
 | **Median** | **1,800 ms** | **3 s** |
