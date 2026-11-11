@@ -26,7 +26,7 @@ export const markets: Market[] = [
   {
     chain: baseSepolia,
     name: "Base Sepolia",
-    rpc: "https://base-sepolia-rpc.publicnode.com",
+    rpc: process.env.NEXT_PUBLIC_BASE_RPC ?? "https://base-sepolia-rpc.publicnode.com",
     explorer: "https://sepolia.basescan.org",
     blockLookback: 13_000n, // ~200 ms blocks
     d: base as Market["d"],
@@ -34,7 +34,7 @@ export const markets: Market[] = [
   {
     chain: unichainSepolia,
     name: "Unichain Sepolia",
-    rpc: "https://unichain-sepolia-rpc.publicnode.com",
+    rpc: process.env.NEXT_PUBLIC_UNICHAIN_RPC ?? "https://unichain-sepolia-rpc.publicnode.com",
     explorer: "https://sepolia.uniscan.xyz",
     blockLookback: 2_700n, // ~1 s blocks
     d: uni as Market["d"],

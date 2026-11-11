@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useAccount, useConnect, useDisconnect, useReadContracts, useReadContract } from "wagmi";
-import { switchChain, writeContract, waitForTransactionReceipt, getChainId } from "wagmi/actions";
+import { switchChain, writeContract, waitForTransactionReceipt, getAccount } from "wagmi/actions";
 import { zeroAddress, type Abi, type Address } from "viem";
 import {
   markets, wagmiConfig, DEMO_ACCOUNT, SENTINEL, REASONS, fmtUsdc,
@@ -88,7 +88,7 @@ export default function Page() {
 
 function Header() {
   const { address, isConnected } = useAccount();
-  const { connect, connectors, isPending } = useConnect();
+  const { connect, connectors, isPending, error } = useConnect();
   const { disconnect } = useDisconnect();
   return (
     <header className="flex flex-wrap items-start justify-between gap-4">
@@ -101,13 +101,22 @@ function Header() {
           {short(address!)} · disconnect
         </button>
       ) : (
-        <button
-          onClick={() => connectors[0] && connect({ connector: connectors[0] })}
-          disabled={isPending || !connectors[0]}
-          className="rounded-md bg-emerald-500 px-4 py-1.5 text-sm font-medium text-black hover:bg-emerald-400 disabled:opacity-50"
-        >
-          {isPending ? "Connecting…" : "Connect wallet"}
-        </button>
+        <div className="flex flex-col items-start gap-1 sm:items-end">
+          <button
+            onClick={() => connectors[0] && connect({ connector: connectors[0] })}
+            disabled={isPending || !connectors[0]}
+            className="rounded-md bg-emerald-500 px-4 py-1.5 text-sm font-medium text-black hover:bg-emerald-400 disabled:opacity-50"
+          >
+            {isPending ? "Connecting…" : "Connect wallet"}
+          </button>
+          {error && (
+            <p role="alert" className="max-w-xs text-xs text-amber-400 sm:text-right">
+              {/provider not found/i.test(error.message)
+                ? "No browser wallet found. Install MetaMask to act; everything below works without one."
+                : error.message.split("\n")[0]}
+            </p>
+          )}
+        </div>
       )}
     </header>
   );
@@ -154,7 +163,8 @@ function MarketCard({ m, viewer, canAct }: { m: Market; viewer: Address; canAct:
     setBusy(label);
     setErr(undefined);
     try {
-      if (getChainId(wagmiConfig) !== chainId) await switchChain(wagmiConfig, { chainId });
+      // getAccount().chainId is the wallet's real chain (may be unsupported, e.g. mainnet); getChainId() is not
+      if (getAccount(wagmiConfig).chainId !== chainId) await switchChain(wagmiConfig, { chainId });
       for (const c of calls) {
         const hash = await writeContract(wagmiConfig, { ...c, chainId } as never);
         await waitForTransactionReceipt(wagmiConfig, { hash, chainId });
