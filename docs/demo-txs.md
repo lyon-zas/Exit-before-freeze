@@ -41,3 +41,25 @@ Contracts: `deployments/` (v2, pool with `unfreeze()`). Sentinel: `0xF3582eAf241
 Latency: **1,800 ms** (block `timestampMs` 1794391347800 → 1794391349600); on-chain `exitTs − originTs` = 2 s.
 Outcome: shielded 2,000 mUSDC back in the wallet; unshielded 2,000 mUSDC still supplied with 0 available.
 The same 12% burst without the hot-wallet signal does not trip (normal limit 20%) — see `test_binance_sameBurstWithoutHotWalletSignalDoesNotTrip`.
+
+## Run 4 — Apr 18 rsETH replay (T2 collateral drain on Base → exits on Base **and** Unichain)
+
+Steps: `reset()` and `seed()` on Base, `SeedShield` on Unichain, then `rseth()` on Base.
+
+| Leg | Chain | Tx | Block |
+|---|---|---|---|
+| Bridge adapter 116,723 → 233 rsETH (−99.8%) | Base Sepolia | `0x844a0976481007dd241ed58f1c95d13f84d054e30a774630b76a2846ee7259c8` | 57354371 |
+| **Exit**: `ExitExecuted` 1,000 mUSDC → owner, reason 2 | Base Sepolia | `0x9aee63e5e4953333da340ed25c430af4a30f560097bcc055532990c2f515752c` | 57354379 |
+| **Exit**: `ExitExecuted` 1,000 mUSDC → owner, reason 2 | Unichain Sepolia | `0x6cd92bd2403ee736dbb75249c3cde1fa95dba4b24bfd89bf0717b777de01cb91` | 67540317 |
+
+Latency: **Base 1,600 ms** (block `timestampMs` 1794392743000 → 1794392744600); **Unichain 2 s** (`exitTs − originTs` in `ExitExecuted`).
+
+## Latency summary
+
+| Run | Base | Unichain |
+|---|---|---|
+| 1 freeze | 2,000 ms | ~4 s |
+| 2 collateral drain | 1,800 ms | 3 s |
+| 3 Binance replay | 1,800 ms | — |
+| 4 rsETH replay | 1,600 ms | 2 s |
+| **Median** | **1,800 ms** | **3 s** |

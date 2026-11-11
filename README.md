@@ -13,8 +13,9 @@ The full on-chain loop runs on testnet: an origin event on Base, a reaction on R
 | 1 | Pool freeze on Base (T5) | Callbacks land on both hubs | Base 2.0 s · Unichain ~4 s |
 | 2 | Bridge-collateral drain on Base (T2) | 1,000 mUSDC exits a Shield **on Unichain** to its owner | Base 1.8 s · Unichain 3 s |
 | 3 | **Oct 29 Binance replay**: hot-wallet outflow (T6), then a 12% borrow burst (T1) | Shielded 2,000 mUSDC out; unshielded 2,000 **stuck at 100% utilization** after the drain | **1.8 s** |
+| 4 | **Apr 18 rsETH replay**: bridge adapter drained 99.8% on Base (T2) | Shields exit on **Base and Unichain** | Base **1.6 s** · Unichain 2 s |
 
-Every transaction hash is in [docs/demo-txs.md](docs/demo-txs.md).
+Median latency from origin block to exit block: **1.8 s on Base** and **3 s on Unichain**. Every transaction hash is in [docs/demo-txs.md](docs/demo-txs.md).
 
 ## How it works
 
@@ -97,4 +98,4 @@ docs/                     demo transactions and latency
 
 ## Roadmap
 
-Live Apr 18 rsETH replay · AI risk agent and Telegram alerts · Next.js dashboard with a live latency meter.
+AI risk agent and Telegram alerts · Next.js dashboard with a live latency meter.
