@@ -1,0 +1,10 @@
+contracts/out/
+contracts/cache/
+contracts/broadcast/*/31337/
+.env
+node_modules/
+.next/
+__pycache__/
+.venv/
+contracts/broadcast/**/dry-run/
+*.recovery.lock
